@@ -1,9 +1,13 @@
-
 import random
-from collections import UserDict
-from enum import StrEnum
+from enum import StrEnum, unique
+
+"""
+Each dice has a currently rolled value, and a location.
+Locations are are in play, on the silver platter, or in slots 1-3 of the current players board
+"""
 
 
+@unique
 class DiceColour(StrEnum):
     BLUE = "blue"
     YELLOW = "yellow"
@@ -12,21 +16,45 @@ class DiceColour(StrEnum):
     WHITE = "white"
 
 
-class DiceState(UserDict[DiceColour,int]):
-    def __setitem__(self, key:DiceColour, value:int):
+@unique
+class DiceLocation(StrEnum):
+    IN_PLAY = "in play"
+    SILVER_PLATTER = "silver platter"
+    SLOT_1 = "slot 1"
+    SLOT_2 = "slot 2"
+    SLOT_3 = "slot 3"
+
+
+class DiceState:
+    dice = dict[DiceColour, tuple[int, DiceLocation]]
+
+    def __init__(self, dice: dict[DiceColour, tuple[int, DiceLocation]]):
+        self.dice = dict(dice)
+
+    def get_die(self, colour: DiceColour) -> tuple[int, DiceLocation]:
+        return self.dice[colour]
+
+    def get_die_value(self, colour: DiceColour) -> int:
+        return self.dice[colour][0]
+
+    def get_die_location(self, colour: DiceColour) -> DiceLocation:
+        return self.dice[colour][1]
+
+    def set_die(self, colour: DiceColour, value: int, location: DiceLocation) -> None:
         if value < 0 or value > 6:  # noqa: PLR2004
             msg = "Value must be 1-6 inclusive"
             raise ValueError(msg)
-        super().__setitem__(key, value)
+        self.dice[colour] = (value, location)
 
     @classmethod
     def rolled(cls) -> "DiceState":
-        return cls({*((c,random.randint(1,6)) for c in DiceColour)})
+        return cls({*((c, (random.randint(1, 6), DiceLocation.IN_PLAY)) for c in DiceColour)})
+
 
 class GameState:
-    dice : DiceState
+    dice: DiceState
 
-    def __init__(self, dice:DiceState):
+    def __init__(self, dice: DiceState):
         self.dice = dice
 
     @classmethod
