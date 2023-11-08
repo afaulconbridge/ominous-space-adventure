@@ -17,6 +17,34 @@ class TestGameState:
     def test_pick_blue(self):
         gamestate = GameState.new_game()
 
-        gamestate = gamestate.pick_blue()
+        gamestate.pick_dice(DiceColour.BLUE)
 
         assert gamestate.dice.get_die_location(DiceColour.BLUE) == DiceLocation.SLOT_1
+
+    def test_pick_yellow(self):
+        gamestate = GameState.new_game()
+
+        gamestate.pick_dice(DiceColour.YELLOW)
+
+        assert gamestate.dice.get_die_location(DiceColour.YELLOW) == DiceLocation.SLOT_1
+
+    def test_pick_green(self):
+        gamestate = GameState.new_game()
+
+        gamestate.pick_dice(DiceColour.GREEN)
+
+        assert gamestate.dice.get_die_location(DiceColour.GREEN) == DiceLocation.SLOT_1
+
+    def test_pick_orange(self):
+        gamestate = GameState.new_game()
+
+        gamestate.pick_dice(DiceColour.ORANGE)
+
+        assert gamestate.dice.get_die_location(DiceColour.ORANGE) == DiceLocation.SLOT_1
+
+    def test_pick_white(self):
+        gamestate = GameState.new_game()
+
+        gamestate.pick_dice(DiceColour.WHITE)
+
+        assert gamestate.dice.get_die_location(DiceColour.WHITE) == DiceLocation.SLOT_1

@@ -1,5 +1,6 @@
 import random
 from enum import StrEnum, unique
+from typing import Self
 
 """
 Each dice has a currently rolled value, and a location.
@@ -46,8 +47,11 @@ class DiceState:
             raise ValueError(msg)
         self.dice[colour] = (value, location)
 
+    def set_die_location(self, colour: DiceColour, location: DiceLocation) -> None:
+        self.dice[colour] = (self.get_die_value(colour), location)
+
     @classmethod
-    def rolled(cls) -> "DiceState":
+    def rolled(cls) -> Self:
         return cls({*((c, (random.randint(1, 6), DiceLocation.IN_PLAY)) for c in DiceColour)})
 
 
@@ -58,5 +62,22 @@ class GameState:
         self.dice = dice
 
     @classmethod
-    def new_game(cls) -> "GameState":
+    def new_game(cls) -> Self:
         return GameState(DiceState.rolled())
+
+    def _low_dice_to_platter(self, upper_value: int) -> None:
+        for colour in DiceColour:
+            dice_value, dice_location = self.dice.get_die(colour)
+            if dice_location == DiceLocation.IN_PLAY and dice_value < upper_value:
+                self.dice.set_die_location(colour, DiceLocation.SILVER_PLATTER)
+
+    def pick_dice(self, colour: DiceColour) -> None:
+        if self.dice.get_die_location(colour) != DiceLocation.IN_PLAY:
+            msg = "Dice must be in play to be picked"
+            raise RuntimeError(msg)
+
+        self.dice.set_die_location(colour, DiceLocation.SLOT_1)
+
+        self._low_dice_to_platter(self.dice.get_die_value(colour))
+
+        # TODO mark on player sheet
