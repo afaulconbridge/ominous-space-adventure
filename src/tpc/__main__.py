@@ -8,10 +8,11 @@ logging.basicConfig(
     handlers=[TextualHandler()],
 )
 
-class LogApp(App):
 
+class LogApp(App):
     def on_mount(self) -> None:
         logging.info("Logged via TextualHandler")
+
 
 if __name__ == "__main__":
     LogApp().run()
