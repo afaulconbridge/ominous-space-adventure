@@ -20,6 +20,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
+dependencies = ["textual", "immutables"]
 
 [project.urls]
 Documentation = "https://github.com/afaulconbridge/tpc#readme"
@@ -32,7 +33,6 @@ virtual = ".hatch"
 [tool.hatch.version]
 path = "src/tpc/__about__.py"
 
-dependencies = ["textual"]
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -42,10 +42,9 @@ dependencies = [
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
-test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
+test-cov = ["coverage run -m pytest {args:tests}",
   "- coverage combine",
-  "coverage report",
+  "coverage report"
 ]
 cov = [
   "test-cov",

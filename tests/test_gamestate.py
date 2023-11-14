@@ -1,4 +1,4 @@
-from tpc.gamestate import DiceLocation, DiceColour, GameState
+from tpc.gamestate import DiceColour, DiceLocation, GameState
 
 
 class TestGameState:
@@ -41,6 +41,13 @@ class TestGameState:
         gamestate.pick_dice(DiceColour.ORANGE)
 
         assert gamestate.dice.get_die_location(DiceColour.ORANGE) == DiceLocation.SLOT_1
+
+    def test_pick_purple(self):
+        gamestate = GameState.new_game()
+
+        gamestate.pick_dice(DiceColour.PURPLE)
+
+        assert gamestate.dice.get_die_location(DiceColour.PURPLE) == DiceLocation.SLOT_1
 
     def test_pick_white(self):
         gamestate = GameState.new_game()
